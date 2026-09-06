@@ -56,11 +56,14 @@ function goTo(index) {
 document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
 document.getElementById('nextBtn').addEventListener('click', () => goTo(current + 1));
 document.getElementById('startBtn').addEventListener('click', () => { lanzarConfeti(30); goTo(current + 1); });
-document.getElementById('celebrateBtn').addEventListener('click', () => lanzarConfeti(60));
+document.getElementById('celebrateBtn').addEventListener('click', () => {
+  lanzarConfeti(75);
+  abrirCelebracionFinal();
+});
 
 // Flechas del teclado
 document.addEventListener('keydown', (e) => {
-  if (document.body.classList.contains('portal-active')) return;
+  if (document.body.classList.contains('portal-active') || document.body.classList.contains('celebration-active')) return;
   if (e.key === 'ArrowRight') goTo(current + 1);
   if (e.key === 'ArrowLeft') goTo(current - 1);
 });
@@ -69,7 +72,7 @@ document.addEventListener('keydown', (e) => {
 let touchStartX = 0;
 document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
 document.addEventListener('touchend', (e) => {
-  if (document.body.classList.contains('portal-active')) return;
+  if (document.body.classList.contains('portal-active') || document.body.classList.contains('celebration-active')) return;
   const diff = touchStartX - e.changedTouches[0].clientX;
   if (Math.abs(diff) > 50) diff > 0 ? goTo(current + 1) : goTo(current - 1);
 });
@@ -376,4 +379,298 @@ slides.forEach((slide, index) => {
 añadirBarraDeProgreso();
 activarTarjetasInteracticas();
 activarParallaxSuave();
+goTo(current);
+
+// ============ MODO CÓMIC · INSIGNIAS Y ACUERDOS COMO MISIÓN ============
+const comicThemes = {
+  familia: { kicker: 'NUESTRA FAMILIA', title: '¡Juntos brillamos!', sticker: '💙', color: '#3977d5' },
+  bienvenida: { kicker: 'HOLA, HOLA', title: '¡Qué alegría!', sticker: '👋', color: '#ef8b2d' },
+  rompehielos: { kicker: 'MISIÓN SECRETA', title: '¡Atrévete!', sticker: '🎁', color: '#b24ec4' },
+  oracion: { kicker: 'MOMENTO ESPECIAL', title: 'Paz y luz', sticker: '✨', color: '#326ca8' },
+  presentacion: { kicker: 'ÁLBUM DE RECUERDOS', title: 'Conóceme', sticker: '📸', color: '#dc688c' },
+  reglas: { kicker: 'MISIÓN DEL SALÓN', title: '¡Lo hacemos juntos!', sticker: '🤝', color: '#287d57' },
+  despedida: { kicker: 'GRAN FINAL', title: '¡Celebramos!', sticker: '🎉', color: '#873fc1' }
+};
+
+function añadirInsigniasComic() {
+  slides.forEach(slide => {
+    const theme = slide.dataset.theme;
+    const datos = comicThemes[theme];
+    if (!datos || slide.querySelector('.comic-badge')) return;
+
+    const badge = document.createElement('div');
+    badge.className = 'comic-badge';
+    badge.style.setProperty('--badge-color', datos.color);
+    badge.innerHTML = `
+      <span class="comic-badge-sticker" aria-hidden="true">${datos.sticker}</span>
+      <small>${datos.kicker}</small>
+      <strong>${datos.title}</strong>
+    `;
+    badge.setAttribute('aria-hidden', 'true');
+    slide.appendChild(badge);
+  });
+}
+
+function decorarRegla(li, indice) {
+  const iconos = ['👂', '💬', '📚', '💛', '🙌', '🌟'];
+  const colores = ['#ffcf4c', '#ff85a5', '#73c8ff', '#87dfaa', '#c59aff', '#ff9a6b'];
+  li.classList.add('rule-mission');
+  li.style.setProperty('--rule-color', colores[indice % colores.length]);
+  li.style.setProperty('--rule-icon', `'${iconos[indice % iconos.length]}'`);
+  li.setAttribute('role', 'button');
+  li.setAttribute('aria-pressed', li.classList.contains('is-checked') ? 'true' : 'false');
+}
+
+function prepararAcuerdosComic() {
+  const slide = document.querySelector('.slide[data-theme="reglas"]');
+  const list = document.getElementById('rulesList');
+  if (!slide || !list || slide.classList.contains('rules-comic')) return;
+  slide.classList.add('rules-comic');
+
+  const hero = document.createElement('div');
+  hero.className = 'rules-hero';
+  hero.innerHTML = `
+    <span class="rules-hero-sticker" aria-hidden="true">🏆</span>
+    <div>
+      <strong>¡Equipo tercero!</strong>
+      <span>Cada acuerdo nos ayuda a crecer y a cuidarnos.</span>
+    </div>
+  `;
+  list.insertAdjacentElement('beforebegin', hero);
+
+  const progress = document.createElement('div');
+  progress.className = 'rules-progress';
+  progress.innerHTML = `
+    <div class="rules-progress-top">
+      <strong id="rulesProgressText">0 acuerdos completados</strong>
+      <span id="rulesProgressFace">🚀</span>
+    </div>
+    <div class="rules-progress-track"><span id="rulesProgressBar"></span></div>
+  `;
+  list.insertAdjacentElement('afterend', progress);
+
+  const actualizarProgreso = () => {
+    const reglas = [...list.querySelectorAll('li')];
+    const completadas = reglas.filter(li => li.classList.contains('is-checked')).length;
+    const porcentaje = reglas.length ? (completadas / reglas.length) * 100 : 0;
+    const texto = document.getElementById('rulesProgressText');
+    const barra = document.getElementById('rulesProgressBar');
+    const cara = document.getElementById('rulesProgressFace');
+    if (!texto || !barra || !cara) return;
+    texto.textContent = completadas === reglas.length && reglas.length
+      ? '¡Misión cumplida! Todos los acuerdos listos 🎉'
+      : `${completadas} de ${reglas.length} acuerdos completados`;
+    barra.style.width = `${porcentaje}%`;
+    cara.textContent = completadas === reglas.length && reglas.length ? '🏆' : completadas ? '⭐' : '🚀';
+    reglas.forEach(li => li.setAttribute('aria-pressed', li.classList.contains('is-checked') ? 'true' : 'false'));
+  };
+
+  list.querySelectorAll('li').forEach((li, indice) => decorarRegla(li, indice));
+  list.addEventListener('click', evento => {
+    const li = evento.target.closest('li');
+    if (!li) return;
+    requestAnimationFrame(() => {
+      li.classList.toggle('is-complete', li.classList.contains('is-checked'));
+      actualizarProgreso();
+      if (li.classList.contains('is-checked')) lanzarConfeti(8);
+    });
+  });
+  list.addEventListener('keydown', evento => {
+    if ((evento.key === 'Enter' || evento.key === ' ') && evento.target.matches('li')) {
+      requestAnimationFrame(() => {
+        evento.target.classList.toggle('is-complete', evento.target.classList.contains('is-checked'));
+        actualizarProgreso();
+      });
+    }
+  });
+
+  const observer = new MutationObserver(() => {
+    list.querySelectorAll('li:not(.rule-mission)').forEach((li, indice) => decorarRegla(li, indice));
+    actualizarProgreso();
+  });
+  observer.observe(list, { childList: true });
+  actualizarProgreso();
+}
+
+añadirInsigniasComic();
+prepararAcuerdosComic();
+
+// ============ FAMILIA SALESIANA · ESCENA INTERACTIVA ============
+function prepararFamiliaSalesiana() {
+  const slide = document.querySelector('.slide[data-theme="familia"]');
+  const mascots = slide?.querySelector('.mascots');
+  if (!slide || !mascots || slide.classList.contains('familia-comic')) return;
+  slide.classList.add('familia-comic');
+
+  const hero = document.createElement('div');
+  hero.className = 'family-hero reveal-item';
+  hero.style.setProperty('--reveal-delay', '80ms');
+  hero.innerHTML = `
+    <span class="family-hero-sun" aria-hidden="true">☀️</span>
+    <div>
+      <strong>Una familia que acompaña</strong>
+      <span>Con alegría, cuidado y esperanza caminamos juntos.</span>
+    </div>
+    <span class="family-hero-sticker" aria-hidden="true">¡Juntos!</span>
+  `;
+  mascots.insertAdjacentElement('beforebegin', hero);
+
+  const connector = document.createElement('div');
+  connector.className = 'family-connector reveal-item';
+  connector.style.setProperty('--reveal-delay', '280ms');
+  connector.innerHTML = '<span>💙</span><i></i><b>✦</b><i></i><span>💛</span>';
+  mascots.insertAdjacentElement('afterend', connector);
+
+  const values = document.createElement('div');
+  values.className = 'family-values reveal-item';
+  values.style.setProperty('--reveal-delay', '360ms');
+  values.innerHTML = `
+    <div class="family-value"><span>💛</span><strong>AMOR</strong><small>Nos cuidamos</small></div>
+    <div class="family-value"><span>🎈</span><strong>ALEGRÍA</strong><small>Compartimos sonrisas</small></div>
+    <div class="family-value"><span>🤝</span><strong>SERVICIO</strong><small>Ayudamos con el corazón</small></div>
+  `;
+  connector.insertAdjacentElement('afterend', values);
+
+  const messages = [
+    'Nos enseña a acompañar con alegría y a mirar a cada niño con cariño.',
+    'Nos recuerda que nunca caminamos solos y que siempre podemos confiar.'
+  ];
+  mascots.querySelectorAll('.mascot-wrap').forEach((card, indice) => {
+    card.classList.add('family-card');
+    card.setAttribute('role', 'button');
+    card.setAttribute('tabindex', '0');
+    card.setAttribute('aria-expanded', 'false');
+    const note = document.createElement('span');
+    note.className = 'family-card-note';
+    note.textContent = messages[indice] || messages[0];
+    card.appendChild(note);
+    const alternar = () => {
+      const abierto = card.classList.toggle('is-open');
+      card.setAttribute('aria-expanded', abierto ? 'true' : 'false');
+    };
+    card.addEventListener('click', alternar);
+    card.addEventListener('keydown', evento => {
+      if (evento.key === 'Enter' || evento.key === ' ') {
+        evento.preventDefault();
+        alternar();
+      }
+    });
+  });
+
+  const messageBox = slide.querySelector('.text-placeholder.filled');
+  if (messageBox) {
+    const mensaje = messageBox.textContent.trim();
+    messageBox.classList.add('family-message', 'reveal-item');
+    messageBox.innerHTML = '';
+    const label = document.createElement('span');
+    label.className = 'family-message-label';
+    label.textContent = '💌 Un mensaje para nuestra familia';
+    const copy = document.createElement('p');
+    copy.textContent = mensaje;
+    messageBox.append(label, copy);
+  }
+}
+
+// ============ CIERRE · GRAN CELEBRACIÓN ============
+function prepararCierreCreativo() {
+  const slide = document.querySelector('.slide[data-theme="despedida"]');
+  const grid = slide?.querySelector('.grid-2');
+  if (!slide || !grid || slide.classList.contains('closing-comic')) return;
+  slide.classList.add('closing-comic');
+
+  const hero = document.createElement('div');
+  hero.className = 'closing-hero reveal-item';
+  hero.style.setProperty('--reveal-delay', '80ms');
+  hero.innerHTML = `
+    <span class="closing-hero-spark" aria-hidden="true">🌟</span>
+    <div><strong>¡Mira todo lo que descubrimos!</strong><span>Hoy cada nombre, cada sonrisa y cada corazón tuvo un lugar especial.</span></div>
+    <span class="closing-hero-stamp" aria-hidden="true">¡WOW!</span>
+  `;
+  grid.insertAdjacentElement('beforebegin', hero);
+
+  const message = grid.querySelector('.text-placeholder');
+  if (message) {
+    message.classList.add('closing-message-card');
+    message.innerHTML = `
+      <span class="closing-card-kicker">💙 Nuestra huella de hoy</span>
+      <strong>Somos una gran familia cuando nos conocemos, nos escuchamos y nos cuidamos.</strong>
+      <small>Gracias por compartir tu alegría y tu corazón.</small>
+    `;
+  }
+
+  const artwork = grid.querySelector('.img-placeholder');
+  if (artwork) {
+    artwork.classList.add('closing-art-card');
+    artwork.innerHTML = `
+      <span class="closing-art" aria-hidden="true">🎨</span>
+      <strong>Tu nombre es un regalo</strong>
+      <small>¡Déjalo llenar el mundo de color!</small>
+    `;
+  }
+
+  const stamps = document.createElement('div');
+  stamps.className = 'closing-stamps reveal-item';
+  stamps.style.setProperty('--reveal-delay', '300ms');
+  stamps.innerHTML = `
+    <span><b>01</b> CONOCER</span>
+    <i>➜</i>
+    <span><b>02</b> COMPARTIR</span>
+    <i>➜</i>
+    <span><b>03</b> CELEBRAR</span>
+  `;
+  grid.insertAdjacentElement('afterend', stamps);
+}
+
+let finalCelebrationOverlay;
+function crearCelebracionFinal() {
+  if (finalCelebrationOverlay) return finalCelebrationOverlay;
+  finalCelebrationOverlay = document.createElement('div');
+  finalCelebrationOverlay.className = 'final-celebration';
+  finalCelebrationOverlay.setAttribute('aria-hidden', 'true');
+  finalCelebrationOverlay.innerHTML = `
+    <div class="finale-confetti-word" aria-hidden="true">✦　🎈　✦　🎉　✦　🎈　✦</div>
+    <div class="finale-dialog" role="dialog" aria-modal="true" aria-labelledby="finaleTitle">
+      <button class="finale-close" type="button" aria-label="Cerrar celebración">×</button>
+      <div class="finale-crown" aria-hidden="true">🏆</div>
+      <p class="finale-kicker">🎉 MISIÓN DEL DÍA COMPLETADA 🎉</p>
+      <h2 id="finaleTitle">¡Lo logramos!</h2>
+      <p class="finale-copy">Hoy comenzamos a conocernos y descubrimos que cada uno es un regalo único para esta gran familia.</p>
+      <div class="finale-quote">“Donde hay alegría, hay un corazón que comparte.” 💙</div>
+      <button class="finale-back" type="button">Volver a la clase ✨</button>
+    </div>
+  `;
+  document.body.appendChild(finalCelebrationOverlay);
+  finalCelebrationOverlay.querySelector('.finale-close').addEventListener('click', cerrarCelebracionFinal);
+  finalCelebrationOverlay.querySelector('.finale-back').addEventListener('click', cerrarCelebracionFinal);
+  finalCelebrationOverlay.addEventListener('click', evento => {
+    if (evento.target === finalCelebrationOverlay) cerrarCelebracionFinal();
+  });
+  return finalCelebrationOverlay;
+}
+
+function abrirCelebracionFinal() {
+  const overlay = crearCelebracionFinal();
+  overlay.classList.add('is-open');
+  overlay.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('celebration-active');
+  reproducirSonidoSorpresa();
+  requestAnimationFrame(() => overlay.querySelector('.finale-back').focus({ preventScroll: true }));
+}
+
+function cerrarCelebracionFinal() {
+  if (!finalCelebrationOverlay) return;
+  finalCelebrationOverlay.classList.remove('is-open');
+  finalCelebrationOverlay.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('celebration-active');
+  document.getElementById('celebrateBtn')?.focus({ preventScroll: true });
+}
+
+document.addEventListener('keydown', evento => {
+  if (evento.key === 'Escape' && finalCelebrationOverlay?.classList.contains('is-open')) {
+    cerrarCelebracionFinal();
+  }
+});
+
+prepararFamiliaSalesiana();
+prepararCierreCreativo();
 goTo(current);
