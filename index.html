@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¡Conocernos! · Tercero A y B</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Confeti que cae al iniciar y al abrir la caja -->
+<div id="confettiLayer" class="confetti-layer"></div>
+
+<div class="deck" id="deck">
+
+  <!-- ================= SLIDE 0 · PORTADA ================= -->
+  <section class="slide slide-cover" data-theme="cover">
+    <div class="shape shape-a bob"></div>
+    <div class="shape shape-b bob-slow"></div>
+    <div class="shape shape-c bob"></div>
+    <div class="cloud cloud1">☁️</div>
+    <div class="cloud cloud2">☁️</div>
+    <div class="star star1">⭐</div>
+    <div class="star star2">✨</div>
+    <div class="star star3">⭐</div>
+    <div class="ribbon-badge">
+      <span>¡Bienvenidos<br>Tercero A y B!</span>
+    </div>
+    <p class="eyebrow pop">Religión · Planificación ERE</p>
+    <h1 class="cover-title pop-big">¡Conocernos! 🎉</h1>
+    <p class="cover-sub pop">Terceros "A" y "B"</p>
+    <p class="cover-date pop">Crear un ambiente acogedor, lleno de confianza y curiosidad ✨</p>
+    <button class="btn-start wiggle-hover" id="startBtn">Empezar la clase →</button>
+    <div class="hills"></div>
+  </section>
+
+  <!-- ================= SLIDE 1 · DON BOSCO Y MARÍA AUXILIADORA ================= -->
+  <section class="slide" data-theme="familia">
+    <div class="cloud cloud1">☁️</div>
+    <div class="cloud cloud2">☁️</div>
+    <span class="slide-tag pop">Nuestra Familia Salesiana</span>
+    <h2 class="pop">¡Nos acompañan siempre! 💙</h2>
+
+    <div class="mascots">
+      <div class="mascot-wrap">
+        <!-- Reemplaza esta imagen por la foto/dibujo de San Bosco. El archivo debe llamarse "donbosco" -->
+        <img class="mascot float-a" src="imagenes/donbosco-removebg-preview.png" alt="San Bosco" onerror="this.src='https://via.placeholder.com/160x220/FFC15E/5a4300?text=donbosco.png'">
+        <p class="mascot-name">San Bosco</p>
+      </div>
+
+      <div class="mascot-wrap">
+        <!-- Reemplaza esta imagen por la foto/dibujo de María Auxiliadora. El archivo debe llamarse "maria" (minúsculas) -->
+        <img class="mascot float-b" src="imagenes/maria-removebg-preview.png" alt="María Auxiliadora" onerror="this.src='https://via.placeholder.com/160x220/3E6FA8/ffffff?text=maria.png'">
+        <p class="mascot-name">María Auxiliadora</p>
+      </div>
+    </div>
+
+    <div class="placeholder text-placeholder filled">
+      San Bosco y María Auxiliadora caminan siempre a nuestro lado, como una gran familia que nos cuida, nos anima y nos enseña a querer a Dios y a los demás con alegría cada día. 💛
+    </div>
+    <div class="hills"></div>
+  </section>
+
+  <!-- ================= SLIDE 2 · BIENVENIDA ================= -->
+  <section class="slide" data-theme="bienvenida">
+    <div class="cloud cloud1">☁️</div>
+    <span class="slide-tag pop">01 · Saludo y Bienvenida</span>
+    <h2 class="pop">¡Bienvenidos! 👋</h2>
+    <p class="tip pop">Dinámica del saludo: formen un círculo. Se puede usar una pelota — cada niño dice su nombre y algo que lo hace feliz.</p>
+
+    <div class="grid-2">
+      <div class="placeholder text-placeholder filled">
+       ¡Hola chicos! Hoy empezamos un camino juntos..., en esta Clase de ERE
+      </div>
+      <div class="badge-frame">
+        <img src="imagenes/logo-removebg-preview.png" alt="logo del curso">
+      </div>
+    </div>
+
+    <div class="song-box">
+      <p class="song-label">🎵 Canción de bienvenida</p>
+      <div class="video-embed">
+        <iframe src="https://www.youtube.com/embed/dLnJFA9sB_g" title="El amor de Dios es maravilloso" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <p class="song-hint">"El amor de Dios es maravilloso" — cambia el código después de <code>/embed/</code> por el ID de tu video de YouTube si quieres otro.</p>
+      <div class="more-links">
+        <span>Más opciones:</span>
+        <a href="https://www.youtube.com/watch?v=jUuG16u9xMU" target="_blank">Recopilación de cantos para catequesis →</a>
+      </div>
+    </div>
+    <div class="hills"></div>
+  </section>
+
+  <!-- ================= SLIDE 3 · ROMPEHIELOS ================= -->
+  <section class="slide" data-theme="rompehielos">
+    <div class="cloud cloud1">☁️</div>
+    <div class="cloud cloud2">☁️</div>
+    <span class="slide-tag pop">02 · Motivación / Rompehielos</span>
+    <h2 class="pop">La caja misteriosa 🎁</h2>
+    <p class="tip pop">Una caja decorada con elementos amigables (ojos, manos) que contenga preguntas sencillas.</p>
+
+    <div class="mystery-box">
+      <div id="boxIcon" class="box-icon">🎁</div>
+      <button id="mysteryBtn" class="btn-primary wiggle-hover">Abrir la caja misteriosa</button>
+      <div id="mysteryQuestion" class="mystery-question hidden"></div>
+    </div>
+
+    <div class="song-box small">
+      <p class="song-label">🎵 Canción movida para romper el hielo</p>
+      <div class="more-links">
+        <a href="https://www.youtube.com/watch?v=jUuG16u9xMU" target="_blank">Cantos animados para catequesis →</a>
+      </div>
+    </div>
+    <div class="hills"></div>
+  </section>
+
+  <!-- ================= SLIDE 4 · ORACIÓN ================= -->
+  <section class="slide" data-theme="oracion">
+    <span class="slide-tag pop">03 · Breve Oración</span>
+    <h2 class="pop">Momento de silencio 🙏</h2>
+    <p class="tip pop">Invitar a cerrar los ojos un instante, respirar profundo y presentar el día a Dios.</p>
+
+    <div class="chalkboard">
+      <p class="chalkboard-label">📝 Espacio en blanco — vas a escribir la oración en la pizarra del salón</p>
+      <div class="chalkboard-lines"></div>
+    </div>
+  </section>
+
+  <!-- ================= SLIDE 5 · PRESENTACIÓN (COLLAGE) ================= -->
+  <section class="slide" data-theme="presentacion">
+    <div class="cloud cloud1">☁️</div>
+    <span class="slide-tag pop">04 · Presentación de la Maestra</span>
+    <h2 class="pop">Conóceme un poco 😊</h2>
+
+    <div class="collage">
+      <div class="photo photo-1"><img src="imagenes/9.jpeg" alt="foto de la maestra"></div>
+      <div class="photo photo-2"><img src="imagenes/1.jpeg" alt="foto de la maestra"></div>
+      <div class="photo photo-3"><img src="imagenes/2.jpeg" alt="foto de la maestra"></div>
+      <div class="photo photo-4"><img src="imagenes/3.jpeg" alt="foto de la maestra"></div>
+      <!-- Añade aquí más fotos: copia una línea, pon tu propio archivo (4.jpeg, 5.jpeg...) -->
+      <div class="photo photo-5"><img src="imagenes/4.jpeg" alt="foto de la maestra" onerror="this.parentElement.classList.add('empty')"></div>
+      <div class="photo photo-6"><img src="imagenes/5.jpeg" alt="foto de la maestra" onerror="this.parentElement.classList.add('empty')"></div>
+      <div class="photo photo-7"><img src="imagenes/6.jpeg" alt="foto de la maestra" onerror="this.parentElement.classList.add('empty')"></div>
+      <div class="photo photo-8"><img src="imagenes/7.jpeg" alt="foto de la maestra" onerror="this.parentElement.classList.add('empty')"></div>
+      <div class="photo photo-9"><img src="imagenes/8.jpeg" alt="foto de la maestra" onerror="this.parentElement.classList.add('empty')"></div>
+    </div>
+    <div class="hills"></div>
+  </section>
+
+  <!-- ================= SLIDE 6 · REGLAS ================= -->
+  <section class="slide" data-theme="reglas">
+    <div class="cloud cloud1">☁️</div>
+    <span class="slide-tag pop">05 · Compromisos de los Estudiantes</span>
+    <h2 class="pop">Nuestros acuerdos 🤝</h2>
+    <p class="tip pop">Escribirlos también en una hoja o en el cuaderno de cada uno, como compromiso personal.</p>
+
+    <ul id="rulesList" class="rules-list">
+      <li>No comer en clase</li>
+      <li>No apodos</li>
+      <li>Cumplir tareas</li>
+    </ul>
+
+    <div class="add-rule">
+      <input type="text" id="newRuleInput" placeholder="Escribe un compromiso nuevo...">
+      <button id="addRuleBtn" class="btn-secondary wiggle-hover">+ Añadir</button>
+    </div>
+    <p class="song-hint">Los compromisos que añadas se guardan solos en el navegador.</p>
+    <div class="hills"></div>
+  </section>
+
+  <!-- ================= SLIDE 7 · CIERRE ================= -->
+  <section class="slide" data-theme="despedida">
+    <div class="cloud cloud1">☁️</div>
+    <span class="slide-tag pop">06 · Dinámica de Cierre</span>
+    <h2 class="pop">El Padre pintó un Dibujo🎨</h2>
+    <div class="grid-2">
+    <div class="song-box">
+      <p class="song-label">🎵 Canción de despedida</p>
+      <div class="video-embed">
+        <iframe src="https://youtu.be/oS2JHFpZg4w?si=wZl3oswuGv3uLkPE" title="Adiós amiguitos hasta mañana" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <p class="song-hint">"el padre pinto un dibujo" — cambia el ID después de <code>/embed/</code> si prefieres otra canción.</p>
+    </div>
+
+    <p class="the-end pop">Fin de la clase · ¡nos vemos pronto! 💙</p>
+    <button id="celebrateBtn" class="btn-start wiggle-hover">🎉 ¡Celebremos!</button>
+    <div class="hills"></div>
+  </section>
+
+</div>
+
+<!-- ================= CONTROLES DE NAVEGACIÓN ================= -->
+<div class="controls">
+  <button id="prevBtn" class="arrow" aria-label="Anterior">‹</button>
+  <div class="dots" id="dots"></div>
+  <button id="nextBtn" class="arrow" aria-label="Siguiente">›</button>
+</div>
+<div class="counter" id="counter">1 / 8</div>
+
+<script src="script.js"></script>
+</body>
+</html>
