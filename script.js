@@ -88,7 +88,14 @@ const preguntas = [
   { texto: '¿Qué te gusta compartir con tus amigos?', emoji: '🤝', color: '#66d7c0' },
   { texto: '¿Qué lugar te gustaría conocer y por qué?', emoji: '🗺️', color: '#7cb8ff' },
   { texto: 'Dile algo bonito a una persona de este salón.', emoji: '💛', color: '#c99aff' },
-  { texto: '¿Qué te gustaría aprender o intentar este año?', emoji: '🚀', color: '#ff9b70' }
+  { texto: '¿Qué te gustaría aprender o intentar este año?', emoji: '🚀', color: '#ff9b70' },
+  { texto: '¿Cual es tu canción favorita?', emoji: '🎶', color: '#42008d' },
+  { texto: '¿Tienes Mascotas?', emoji: '🐾', color: '#ac793f' },
+  { texto: '¿Cual es tu materia favorita?', emoji: '👀', color: '#00597c' },
+  { texto: '¿Cual es tu color favorito?', emoji: '🟣', color: '#8d3fac' },
+  { texto: '¿Cual es tu pelicula o serie favorita?', emoji: '🎞', color: '#8f2323' },
+  { texto: '¿Te gusta leer?', emoji: '📖', color: '#8bf072' },
+  { texto: '¿Que te gustaria ser de grande?', emoji: '👔', color: '#edff49' }
 ];
 
 const mysteryBtn = document.getElementById('mysteryBtn');
@@ -432,7 +439,7 @@ function prepararAcuerdosComic() {
   hero.innerHTML = `
     <span class="rules-hero-sticker" aria-hidden="true">🏆</span>
     <div>
-      <strong>¡Equipo tercero!</strong>
+      <strong>¡Equipo Cuartos!</strong>
       <span>Cada acuerdo nos ayuda a crecer y a cuidarnos.</span>
     </div>
   `;
